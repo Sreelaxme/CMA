@@ -4,33 +4,63 @@ from Qn2 import ERRandomGraph
 import matplotlib.pyplot as plt
 import random
 import math
+import queue
 
-def oneTwoComponentSizes(graph:UndirectedGraph):
-    componentSizes = []
-    nodes= list(graph.graph.keys())
-    frontier = [nodes.pop(0)]
-    expanded = []
+# def oneTwoComponentSizes(graph:UndirectedGraph):
+#     componentSizes = []
+#     nodes= list(graph.graph.keys())
+#     frontier = [nodes.pop(0)]
+#     expanded = []
 
-    #BFS
-    componentSize = 0
-    while len(frontier) > 0:
-        curr = frontier.pop(0)
-        componentSize += 1
-        expanded.append(curr)
-        frontier += [neigh for neigh in graph.graph[curr] if ((neigh not in expanded) and (neigh not in frontier))]
-        try:
-            nodes.remove(curr)
-        except:
-            pass
-        if len(frontier) == 0 and len(nodes)>0:
-            componentSizes.append(componentSize)
-            componentSize = 0
-            frontier = [nodes.pop()]
+#     #BFS
+#     componentSize = 0
+#     while len(frontier) > 0:
+#         curr = frontier.pop(0)
+#         componentSize += 1
+#         expanded.append(curr)
+#         frontier += [neigh for neigh in graph.graph[curr] if ((neigh not in expanded) and (neigh not in frontier))]
+#         try:
+#             nodes.remove(curr)
+#         except:
+#             pass
+#         if len(frontier) == 0 and len(nodes)>0:
+#             componentSizes.append(componentSize)
+#             componentSize = 0
+#             frontier = [nodes.pop()]
 
-    if len(componentSizes) == 0:
-        return [componentSize,0]
+#     if len(componentSizes) == 0:
+#         return [componentSize,0]
     
-    return sorted(componentSizes + [componentSize],reverse = True)[:2]
+#     return sorted(componentSizes + [componentSize],reverse = True)[:2]
+def oneTwoComponentSizes(graph:UndirectedGraph):
+    vertices = set(graph.graph.keys())  # Adjusted range to include all vertices
+
+    # q.put(vertices[0])
+    components = [0,0]
+    visited = set()  # Keep track of visited nodes
+    while True:
+      diff = list(vertices-visited)
+      if len(diff)<=components[1]:
+        break
+      q = queue.Queue()
+      q.put(diff[0])
+      count = 0
+      while not q.empty():
+          node = q.get()
+          visited.add(node)
+          count+=1
+          # print(node)
+
+          for neighbor in graph.graph[node]:  # Assuming self.graph is an adjacency list
+              if neighbor not in visited:
+                  q.put(neighbor)
+      if count>components[0]:
+        components[1] = components[0]
+        components[0] = count
+      elif count > components[1]:
+        components[1] = count
+
+    return components
 
 UndirectedGraph.oneTwoComponentSizes = oneTwoComponentSizes
 
