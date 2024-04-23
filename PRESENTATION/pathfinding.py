@@ -1,86 +1,163 @@
-from collections import defaultdict,deque
 import networkx as nx
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
-
-def bfs(G, source , target):
-    q = deque()
-    q.append(source)
-    visited = [source]
-    path = []
-    while q :
-
-        curr = q.popleft()
-        path.append(curr)
-        print("keriii")
-        if curr == target :
-            break
-        for neigh in G.neighbors(curr):
-
-            if neigh not in visited:
-                visited.append(neigh)
-                q.append(neigh)
-    # print(path)
-    return path
-def dfs(graph, start,target):
+import matplotlib.animation as animation
+import time
+import random 
+def dfs(graph, start, end):
     visited = set()
-    stack = [start]
-    path = []
+    stack = [(start, [start])]
+    start_time = time.time()  # Record the start time
+
+    pos = nx.spring_layout(graph)
+
     while stack:
-        current_node = stack.pop()
-        print("kerii")
-        path.append(current_node)
-        if current_node == target:
-            return
+        current_node, path = stack.pop()
+        if current_node == end:
+            return  (time.time() - start_time)*(10**3)  # Return the path and the time taken
+
+            # return path
+
         if current_node not in visited:
             visited.add(current_node)
-            print(current_node)  # Process the node (or do whatever you want)
-            for neighbor in graph[current_node]:
+            for neighbor in graph.neighbors(current_node):
                 if neighbor not in visited:
-                    stack.append(neighbor)
-    return path
-def visualize_graph_with_path(graph, path):
+                    stack.append((neighbor, path + [neighbor]))
+
+                    # Highlight the edge being explored
+                    # yield path + [neighbor]
+def bfs(graph, start, end):
+    visited = set()
+    queue = [(start, [start])]
     pos = nx.spring_layout(graph)
-    nx.draw(graph, pos, with_labels=True, node_color='skyblue', node_size=700)
-    nx.draw_networkx_nodes(graph, pos, nodelist=path, node_color='red', node_size=700)
-    nx.draw_networkx_edges(graph, pos, edgelist=[(path[i], path[i+1]) for i in range(len(path)-1)], edge_color='red', width=2)
-    plt.show()
+    start_time = time.time()  # Record the start time
+
+    while queue:
+        current_node, path = queue.pop(0)
+        if current_node == end:
+            return (time.time() - start_time)*(10**3)  # Return the path and the time taken
 
 
+        if current_node not in visited:
+            visited.add(current_node)
+            for neighbor in graph.neighbors(current_node):
+                # debug+=str(neighbor)
+                if neighbor not in visited:
+                    queue.append((neighbor, path + [neighbor]))
+
+
+
+
+
+def dijkstra(graph, start, end):
+    # Initialize distances dictionary with infinite distance for all nodes
+    distances = {node: float('inf') for node in graph.nodes()}
+    # Initialize the distance to the start node as 0
+    distances[start] = 0
+    start_time = time.time()
+    # Initialize empty dictionary to store predecessors
+    predecessors = {}
+    
+    # Initialize priority queue with start node and its distance
+    priority_queue = [(start, 0)]
+    
+    while priority_queue:
+        # Pop the node with the smallest distance from the priority queue
+        current_node, current_distance = priority_queue.pop(0)
+        
+        # Stop if we reached the end node
+        if current_node == end:
+            break
+        
+        # Iterate over neighbors of the current node
+        for neighbor in graph.neighbors(current_node):
+            # Calculate the new distance to the neighbor
+            new_distance = current_distance + graph[current_node][neighbor].get('weight', 1)
+            
+            # If the new distance is shorter than the current distance
+            if new_distance < distances[neighbor]:
+                # Update the distance to the neighbor
+                distances[neighbor] = new_distance
+                # Update the predecessor of the neighbor
+                predecessors[neighbor] = current_node
+                # Add the neighbor and its distance to the priority queue
+                priority_queue.append((neighbor, new_distance))
+                # Sort the priority queue based on distances
+                priority_queue.sort(key=lambda x: x[1])
+    
+    # If we reached the end node, reconstruct the path
+    if end in predecessors:
+        path = []
+        current_node = end
+        while current_node != start:
+            path.insert(0, current_node)
+            current_node = predecessors[current_node]
+        path.insert(0, start)
+        return (time.time() - start_time)*(10**3)
+        # return path, distances[end]
+    else:
+        # No path found
+        return float('inf')
+
+    
 if __name__ == "__main__":
-    # graph = nx.Graph()
-    # edge = [(1, 2), (1, 3), (1, 4), (1, 5), (2, 3), (2, 4), (2, 5), (3, 4), (3, 5), (4, 5)]
-    # graph.add_edges_from(edge)
-    # pos = nx.spring_layout(graph)
-    # nx.draw_networkx(graph,pos)
-    # path = dfs(graph, 1 ,3)
+    dfs_time = []
+    bfs_time = []
+    dij_time = []
+    X = []
+        # Function to generate a random graph
+    def generate_random_graph(nodes, edges):
+        G = nx.gnm_random_graph(nodes, edges)
+        return G
 
-    # def update(frame):
-    #     ax.clear()
-    #     nx.draw(G, pos, with_labels=True, node_color='skyblue', node_size=700, ax=ax)
-    #     if frame < len(path):
-    #         nx.draw_networkx_nodes(G, pos, nodelist=path[:frame+1], node_color='red', node_size=700, ax=ax)
-    #         nx.draw_networkx_edges(G, pos, edgelist=[(path[i], path[i+1]) for i in range(frame)], edge_color='red', width=2, ax=ax)
+    # Generate 10 random graphs with different number of nodes and edges
+    graphs = []
+    for i in range(200,300):
+        # num_nodes = random.randint(i, i+5)
+        num_nodes = i
+        num_edges = random.randint(num_nodes - 1, num_nodes * (num_nodes - 1) // 2)
+        X.append(num_nodes)
+        graph = generate_random_graph(num_nodes, num_edges)
+        graphs.append(graph)
 
-    G = nx.Graph()
-    G.add_edges_from([(1, 2), (1, 3), (2, 4), (2, 5), (3, 6), (3, 7), (4, 8), (5, 9)])
-    start_node = 1
-    end_node = 9
+    # Run algorithms on each graph
+    for graph in graphs:
+        # Example start and end nodes
+        start_node = random.choice(list(graph.nodes()))
+        end_node = random.choice(list(graph.nodes()))
 
-    path = bfs(G, start_node, end_node)
-    visualize_graph_with_path(G,path)
-    # print(path)
-    # if path:
-    #     print("Path found:", path)
+        # Run DFS
+        dfs_t = dfs(graph, start_node, end_node)
+        dfs_time.append(dfs_t)
 
-    #     fig, ax = plt.subplots()
-    #     pos = nx.spring_layout(G)
-    #     ani = FuncAnimation(fig, update, frames=len(path)+1, interval=1000, repeat=False)
-    #     # plt.close()  # Prevents duplicate plots in Colab
+        # Run BFS
+        bfs_t = bfs(graph, start_node, end_node)
+        bfs_time.append(bfs_t)
 
-    #     # HTML(ani.to_jshtml())
-    #     # ani.save("hii.mp4",fps = 3)
-    #     # Show animation
-    #     plt.show()
-    # else:
-    #     print("No path found between nodes", start_node, "and", end_node)
+        tdij = dijkstra(graph,start_node,end_node)
+        dij_time.append(tdij)
+
+
+    # for i in range(0, 10):
+    #     G = nx.complete_graph(i + 5)
+    #     tbfs = bfs(G, 0, i)
+    #     tdfs = dfs(G, 0, i)
+    #     tdij = dijkstra(G,0,i)
+    #     dfs_time.append(tdfs)
+    #     bfs_time.append(tbfs)
+    #     dij_time.append(tdij)
+    # Create a sample graph
+   
+    # X = [i for i in range(1, 101)]
+    print(X)
+    print("dfs time ",dfs_time)
+    print("bfs time ", bfs_time)
+    print("Dij time ", dij_time)
+    plt.plot(X, dfs_time, label="DFS Time")
+    plt.plot(X, bfs_time, label="BFS Time")
+    plt.plot(X,dij_time,label = "Dijkstras Time")
+    plt.xlabel("Number of Nodes")
+    plt.ylabel("Time (milliseconds)")
+    plt.title("Time for different algorithms")
+    plt.legend()
+    plt.grid()
+    plt.show()

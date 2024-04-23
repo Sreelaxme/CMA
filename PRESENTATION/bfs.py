@@ -2,33 +2,27 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-def bfs_animation(graph, start, end):
+def bfs(graph, start, end):
     visited = set()
     queue = [(start, [start])]
-    pos = nx.spring_layout(graph)
-    print(end)
     while queue:
-        print("queue is ",queue)
+        print("queue",queue)
         current_node, path = queue.pop(0)
-        print("current_node,path and end is ",current_node, path,end)
+
         if current_node == end:
-            print("we are terminating with current node and path",current_node,path)
             return path
 
         if current_node not in visited:
             visited.add(current_node)
-            debug = ""
             for neighbor in graph.neighbors(current_node):
-                # debug+=str(neighbor)
                 if neighbor not in visited:
                     queue.append((neighbor, path + [neighbor]))
 
-                    # Highlight the edge being explored
-                    # yield path + [neighbor]
+                    
                 
             # print(debug)
 def animate_path(graph, path):
-    pos = nx.spring_layout(graph)
+    pos = nx.circular_layout(graph)
     
     def animate(i):
         ax.clear()
@@ -45,14 +39,14 @@ def animate_path(graph, path):
 G = nx.DiGraph()
 # G.add_edges_from([(0, 1), (0, 2), (1, 3), (1, 4), (2, 4), (2, 5), (4, 6), (6, 7)])
 
-G.add_edges_from([(0, 1), (1, 2),  (2, 0), (0, 3), (3, 4), (4, 0)])
-
+# G.add_edges_from([(0, 1), (1, 2),  (2, 0), (0, 3), (3, 4), (4, 0)])
+G.add_edges_from([(0,1),(0,2),(0,3),(9,4),(9,5),(3,6),(2,6),(2,7),(3,8),(5,1),(0,9)])
 start_node = 0
-end_node = 2
+end_node = 1
 
 # print(list(G.neighbors(1)))
 
-path = bfs_animation(G, start_node, end_node)
+path = bfs(G, start_node, end_node)
 # path = []
 # for edge in path_generator:
 #     path += edge

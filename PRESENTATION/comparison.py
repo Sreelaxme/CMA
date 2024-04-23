@@ -2,7 +2,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import time
-def dfs_animation(graph, start, end):
+def dfs(graph, start, end):
     visited = set()
     stack = [(start, [start])]
     start_time = time.time()  # Record the start time
@@ -24,7 +24,7 @@ def dfs_animation(graph, start, end):
 
                     # Highlight the edge being explored
                     # yield path + [neighbor]
-def bfs_animation(graph, start, end):
+def bfs(graph, start, end):
     visited = set()
     queue = [(start, [start])]
     pos = nx.spring_layout(graph)
@@ -47,15 +47,16 @@ def bfs_animation(graph, start, end):
 if __name__ == "__main__":
     dfs_time = []
     bfs_time = []
+    X = []
     for i in range(0, 10):
         G = nx.complete_graph(i + 5)
-        tbfs = bfs_animation(G, 0, i)
-        tdfs = dfs_animation(G, 0, i)
+        X.append(i+5)
+        tbfs = bfs(G, 0, i)
+        tdfs = dfs(G, 0, i)
         dfs_time.append(tdfs)
         bfs_time.append(tbfs)
 
-    X = [i for i in range(5, 15)]
-    print(X)
+    
     print("dfs time ",dfs_time)
     print("bfs time ", bfs_time)
     plt.plot(X, dfs_time, label="DFS Time")

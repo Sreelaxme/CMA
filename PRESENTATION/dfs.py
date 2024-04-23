@@ -1,14 +1,15 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-
-def dfs_animation(graph, start, end):
+def dfs(graph, start, end):
     visited = set()
     stack = [(start, [start])]
-    pos = nx.spring_layout(graph)
 
     while stack:
+        print("stack",stack)
         current_node, path = stack.pop()
+        
+        print("current node", current_node)
         if current_node == end:
             return path
 
@@ -18,11 +19,10 @@ def dfs_animation(graph, start, end):
                 if neighbor not in visited:
                     stack.append((neighbor, path + [neighbor]))
 
-                    # Highlight the edge being explored
-                    # yield path + [neighbor]
 
 def animate_path(graph, path):
-    pos = nx.spring_layout(graph)
+    pos = nx.circular_layout(graph)
+    
     
     def animate(i):
         ax.clear()
@@ -33,6 +33,7 @@ def animate_path(graph, path):
     
     fig, ax = plt.subplots()
     ani = animation.FuncAnimation(fig, animate, frames=len(path), repeat=False)
+    ani.save('dfs.mp4')
     plt.show()
 
 # Example usage:
@@ -40,12 +41,15 @@ G = nx.DiGraph()
 # G.add_edges_from([(0, 1), (0, 2), (1, 3), (1, 4), (2, 4), (2, 5), (4, 6), (6, 7)])
 
 
-G.add_edges_from([(0, 1), (1, 2), (2, 1), (2, 0), (0, 3), (3, 4), (4, 0)])
-print(list(G.neighbors(0)))
-start_node = 0
-end_node = 2
+# # G.add_edges_from([(0, 1), (1, 2), (2, 1), (2, 0), (0, 3), (3, 4), (4, 0)])
+# # print(list(G.neighbors(0)))
+# start_node = 0
+# end_node = 7
 
-path = dfs_animation(G, start_node, end_node)
+G.add_edges_from([(0,1),(0,2),(0,3),(9,4),(9,5),(3,6),(2,6),(2,7),(3,8),(5,1),(0,9)])
+start_node = 0
+end_node = 1
+path = dfs(G, start_node, end_node)
 # path = None
 # for edge in path_generator:
 #     path = edge
