@@ -1,72 +1,53 @@
-import numpy as np
-pi = np.pi
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
-def pendulumSim(initTheta = pi/3,initOmega = 0):
-    h = 0.001
-    s = 10
+import numpy as np
+from math import sin,pi,cos
+
+g = 9.8
+L = 1
+theta_dot_dot = lambda x : -g/L * sin(x)
+
+def pendulum(s=10,initTheta = pi/3,initOmega = 0):
+    theta = [initTheta]
+    theta_dot = [initOmega]
+    t = []
+    h= 0.001
     fps = 25
     ms = int(1000/fps)
     factor = int(1/(fps*h))
-    
-    L = 2
-    g = 10
-    X = np.arange(0,10+h,h)
-    t = []
-    thetaDot = [initOmega]
-    theta = [initTheta]
-    ti=0
-    while ti <= s:
+    ti = 0
+    while ti<=s:
         t.append(ti)
-        ti += h
-    for i in X:
-        if i==0: continue
-        newthetaDot = thetaDot[-1] - h*(g*np.sin(theta[-1]))/L
-        thetaDot.append(newthetaDot)
-        newTheta = theta[-1]+thetaDot[-2]*h
+        ti+=h
+
+    for ti in t[1:]:
+        newTheta = theta[-1]+ h * theta_dot[-1]
         theta.append(newTheta)
 
-    # return theta
-        
+        newTheta_dot = theta_dot[-1] + h * theta_dot_dot(theta[-2])
+        theta_dot.append(newTheta_dot)
 
-# if __name__=="__main__":
-    fig = plt.figure()
-    axis = plt.axes(xlim = (-4,4),ylim=(-4,4))
-    
-    pendulum, = axis.plot([],[])
-    dot = axis.scatter([], [],s = 100,color = "r", label = "bob")
-    # print(type(pendulum))
-    x_frm_ang = lambda t: L*np.sin(theta[factor*t])
-    y_frm_ang = lambda t: -L*np.cos(theta[factor*t])
+    # -------------------------------------------
+    fig , ax = plt.subplots()
+    line, = ax.plot([],[],color = 'black')
+    # line1, = ax.plot([],[],color='r')
+    dot = ax.scatter([],[],s=100,color = 'r')
+    ax.set_xlim([-1.5*L,1.5*L])
+    ax.set_ylim([-1.5*L,1.5*L])
+    x_frm_ang = lambda t : L * sin(theta[factor*t])
+    y_frm_ang = lambda t : -L * cos(theta[factor*t])
 
-    plt.grid()
-    def update(i):
-            fps = 25
-            h = 0.001
-            factor = int(1/(fps*h))
+    def animate(i):
+        x = [0,x_frm_ang(i)]
+        y = [0,y_frm_ang(i)]
 
-            theta = pendulumSim()
-            L = 2
-            # Calculate the position of the pendulum bob
-            x = [0,x_frm_ang(i)]
-            y = [0,y_frm_ang(i)]
-
-            # Update the position of the pendulum bob
-            pendulum.set_data([0, x], [0, y])
-            dot.set_offsets([x,y])
-            return pendulum,dot
-
-    # call the animation function
-    anim = animation.FuncAnimation(fig, update,
-                                frames = s*fps,)
-
-    # Show animation
+        line.set_data(x,y)
+        dot.set_offsets([(x[1],y[1])])
+        return line,dot
+    ani = animation.FuncAnimation(fig,animate)
+    plt.scatter([0],[0],label = 'pivot',color = 'black')
+    plt.legend()
     plt.show()
 
-# def init():
-#     # [line.set_data([],[]) for line in lines]
-#     pendulum.set_data([0,2],[0,0])
-#     return pendulum
-
-if __name__=="__main__":
-    pendulumSim()
+if __name__ == "__main__":
+    pendulum()
