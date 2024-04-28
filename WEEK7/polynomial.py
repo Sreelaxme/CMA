@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import random
+import scipy.integrate as integrate
 
 class Polynomial:
     def __init__(self,coeff):
         self.coeff = coeff
-        
     def __call__(self,value):
         return self[value]
     def __str__(self):
