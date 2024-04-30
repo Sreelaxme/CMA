@@ -179,12 +179,12 @@ class Matrix:
                 sum_Rx = np.dot(R[i, i+1:], x[i+1:])
                 x[i] = -sum_Rx / R[i, i] if R[i, i] != 0 else 0
         # converting into matrix 
-        m = Matrix(n,1)
+            m = Matrix(n,1)
 
-        for i in range(n):
-            m[i,0] = x[i]
-        
-        return m
+            for i in range(len(x)):
+                m[i,0] = x[i]
+            
+            return m
     def dominantEigen(self):
         b = Matrix(self.n,1)
         b.toOne()
@@ -286,22 +286,22 @@ if __name__=="__main__":
     # print(m.norm(2))
     # print(m.norm(math.inf))
 
-    # m = Matrix(2, 3)
+    m = Matrix(2, 3)
 
-    # for i in range(2):
-    #     for j in range(3):
-    #         m[i, j] = (i+1) + (j+1)
-    # print(m)
-    # print(m.solvezero())
-
-    m = Matrix(3, 3)
-    for i in range(3):
+    for i in range(2):
         for j in range(3):
-            m[i, j] = (i+1) ** (j+1)
+            m[i, j] = (i+1) + (j+1)
     print(m)
-    e, v = m.dominantEigen()
-    print(e)
-    print(v)
+    print(m.solvezero())
+
+    # m = Matrix(3, 3)
+    # for i in range(3):
+    #     for j in range(3):
+    #         m[i, j] = (i+1) ** (j+1)
+    # print(m)
+    # e, v = m.dominantEigen()
+    # print(e)
+    # print(v)
     # m = Matrix(2,3)
     # m[0,0] = 0.69907995
     # m[0,1] = 0.74917486
