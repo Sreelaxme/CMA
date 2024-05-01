@@ -11,9 +11,9 @@ def back_euler(x0,t0,T,h):
         xn.append(xi)
 
     poly = np.polyfit(points,xn,len(points)-1)
-    # X = np.linspace(0,10,110)
-    y = np.polyval(poly,points)
-    plt.plot(points,y,label=f'h = {h}')
+    X = np.linspace(0,10,110)
+    y = np.polyval(poly,X)
+    plt.plot(X,y,label=f'h = {h}')
 
 def plots(H,x0,t0,T):
     for h in H:

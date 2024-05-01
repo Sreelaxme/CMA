@@ -32,9 +32,9 @@ def fastMultLargeNums(a,b):
 if __name__ == "__main__":
 
     a = 2**10
-    b = 2**20
+    b = 2**10
     val= fastMultLargeNums(a,a)
     # val= fft_multiply(a,a)
 
-    print(b)
+    print(a*b)
     print(val)

@@ -2,7 +2,7 @@ from Qn2 import SquareMatrixFloat
 import matplotlib.pyplot as plt
 
 def errorVisualizer():
-    m = 20
+    m = 100
     b = [1,2,3,4]
     x = [i+1 for i in range(m)]
     s = SquareMatrixFloat(4)

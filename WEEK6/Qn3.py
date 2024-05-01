@@ -14,7 +14,7 @@ def pendulum(s=10,initTheta = pi/3,initOmega = 0):
     h= 0.001
     fps = 25
     ms = int(1000/fps)
-    factor = int(1/(fps*h))
+    factor = int(1/(10*h))
     ti = 0
     while ti<=s:
         t.append(ti)
@@ -34,12 +34,12 @@ def pendulum(s=10,initTheta = pi/3,initOmega = 0):
     dot = ax.scatter([],[],s=100,color = 'r')
     ax.set_xlim([-1.5*L,1.5*L])
     ax.set_ylim([-1.5*L,1.5*L])
-    x_frm_ang = lambda t : L * sin(theta[factor*t])
-    y_frm_ang = lambda t : -L * cos(theta[factor*t])
+    x_frm_ang = lambda t : L * sin(theta[t])
+    y_frm_ang = lambda t : -L * cos(theta[t])
 
     def animate(i):
-        x = [0,x_frm_ang(i)]
-        y = [0,y_frm_ang(i)]
+        x = [0,x_frm_ang(i*factor)]
+        y = [0,y_frm_ang(i*factor)]
 
         line.set_data(x,y)
         dot.set_offsets([(x[1],y[1])])

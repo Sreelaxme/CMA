@@ -5,15 +5,17 @@ f = lambda x : -2*x
 def forward_euler(x0,t0,T,h):
 
     xn = [x0]
-    points = np.arange(0,10,h)
+    points = np.arange(0,10+h,h)
     for i in range(len(points)-1):
+        # if i==0: continue
         xi = xn[-1] + h * f(xn[-1])
         xn.append(xi)
-
+    print(len(points))
+    print(len(xn))
     poly = np.polyfit(points,xn,len(points)-1)
-    # X = np.linspace(0,10,110)
-    y = np.polyval(poly,points)
-    plt.plot(points,y,label=f'h = {h}')
+    X = np.linspace(0,10,100)
+    y = np.polyval(poly,X)
+    plt.plot(X,y,label=f'h = {h}')
 
 def plots(H,x0,t0,T):
     for h in H:

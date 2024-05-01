@@ -8,7 +8,9 @@ from matplotlib.lines import Line2D
 
 def three_body_problem(r0,v0,t0,T,n):
     def get_norm(r1,r2):
-        return np.linalg.norm(r2-r1)
+        x1,x2 = r1
+        y1,y2 = r2
+        return ((y2-y1)**2 + (x2-x1)**2)**1
     def double_derivative(r1,r2,r3):
         norm1 = get_norm(r2,r1)**3
         norm2 = get_norm(r3,r1)**3
@@ -24,8 +26,8 @@ def three_body_problem(r0,v0,t0,T,n):
         return dd
 
     t = np.linspace(t0,T,n)
-    sol = solve_ivp(three_derivatives,[t0,T],y0=[*r0,*v0],t_eval = t,method = 'RK45')
-    print(len(sol.y))
+    sol = solve_ivp(three_derivatives,[t0,T],y0=[*r0,*v0],t_eval = t)
+    print(sol.y)
     r1x,r1y,r2x,r2y,r3x,r3y,_,_,_,_,_,_ = sol.y
 
     fig,ax = plt.subplots()
@@ -41,14 +43,8 @@ def three_body_problem(r0,v0,t0,T,n):
 
     def init():
         ax.set_title("Three body")
-        minx = min(min(r1x),min(r2x),min(r3x))
-        maxx = max(max(r1x),max(r2x),max(r3x))
-        xtraX = (maxx-minx)/8
-        miny = min(min(r1y),min(r2y),min(r3y))
-        maxy = max(max(r1y),max(r2y),max(r3y))
-        xtraY = (maxy-miny)/8
-        ax.set_xlim([minx - xtraX , maxx + xtraX ])
-        ax.set_ylim([miny - xtraY , maxy + xtraY ])
+        ax.set_xlim(-2,6)
+        ax.set_ylim(-4,4)
         return bodies 
     
     def animate(i):
@@ -72,5 +68,4 @@ def three_body_problem(r0,v0,t0,T,n):
 
 
 if __name__ == "__main__":
-    # three_body_problem([*[0, 0], *[3, math.sqrt(3)], *[3, -math.sqrt(3)]],[*[0,0],*[0,0],*[0,0]],0,800,2000)
-        three_body_problem([*[-10, 0], *[0,10], *[20,0]],[*[0,0],*[0,0],*[0,0]],0,800,2000)
+    three_body_problem([*[0, 0], *[3, math.sqrt(3)], *[3, -math.sqrt(3)]],[*[0,0],*[0,0],*[0,0]],0,800,2000)

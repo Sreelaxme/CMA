@@ -17,7 +17,9 @@ class Matrix:
         mat = "A "+ str(self.m) +" x " + str(self.n) + " matrix with entries: \n"
         for i in range(self.m):
             for j in range(self.n):
-                mat += '{:<10.8f}'.format(float(self.matrix[i][j]))
+                # mat += '{:.8f}'.format(float(self.matrix[i][j]))
+                mat +=(f'{self.matrix[i][j]:0,.8f}')
+
                 mat += " "
 
             mat += "\n"
@@ -244,9 +246,9 @@ class Matrix:
 
         return eigenvalue, x
 if __name__=="__main__":
-    # m = Matrix(3,4)
-    # m.toOne()
-    # print(m)
+    m = Matrix(3,4)
+    m.toOne()
+    print(m)
     # m = Matrix(3, 4)
     # m[1, 1] = 2
     # m[2, 3] = 4
