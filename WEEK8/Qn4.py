@@ -21,10 +21,11 @@ def qreig(M:Matrix):
     I = Matrix(A.m,A.n)
     I.toEye()
     for eig in eigenvalues:
-        Mc = Matrix(M.m,M.n)
-        Mc.matrix = Mc.matrix
-        X = Mc - eig*I
-        X.solvezero()
+        # Mc = Matrix(M.m,M.n)
+        # Mc.matrix = M.matrix
+        X = A - eig*I
+        
+        # X.solvezero()
         eigenvectors.append((X.solvezero()).matrix)
 
     return eigenvalues,eigenvectors

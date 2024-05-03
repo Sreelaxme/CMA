@@ -37,7 +37,7 @@ def roots (f,a,b):
             X0.append(x)
         x_prev = x
 
-    P = poly(len(X0)+5,f,M,a=a,b=b)
+    P = poly(len(X0)+1,f,M,a=a,b=b)
     return P.printRoots(X0)
 
 

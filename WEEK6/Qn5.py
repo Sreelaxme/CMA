@@ -30,7 +30,7 @@ def three_body_problem(r0,v0,t0,T,n):
 
     fig,ax = plt.subplots()
     bob_radius = 0.1
-    line1, = ax.plot([], [],color = "b")
+    line1, = ax.plot([], [],color = 'b')
     line2, = ax.plot([], [],color = "y")
     line3, = ax.plot([], [],color = "r")
     body1 = ax.add_patch(plt.Circle((r1x[0],r1y[0]),bob_radius,color='r'))
@@ -49,7 +49,7 @@ def three_body_problem(r0,v0,t0,T,n):
         xtraY = (maxy-miny)/8
         ax.set_xlim([minx - xtraX , maxx + xtraX ])
         ax.set_ylim([miny - xtraY , maxy + xtraY ])
-        return bodies 
+        # return bodies 
     
     def animate(i):
         line1.set_data(r1x[:i+1],r1y[:i+1])
@@ -64,10 +64,10 @@ def three_body_problem(r0,v0,t0,T,n):
     anim = animation.FuncAnimation(fig,animate,frames = len(r1x),init_func=init, interval = 1,blit = True)
 
     # Making custom legend
-    line1 = Line2D([], [], color="red", marker='o', markersize=7, markerfacecolor="red")
-    line2 = Line2D([], [], color="blue", marker='o', markersize=7, markerfacecolor="blue")
-    line3 = Line2D([], [], color="green", marker='o', markersize=7, markerfacecolor="green")
-    plt.legend((line1, line2, line3), ('Body 1', 'Body 2', 'Body 3'), numpoints=1, loc=1)
+    line1a = Line2D([], [], color="red", marker='o', markersize=7, markerfacecolor="red")
+    line2a = Line2D([], [], color="blue", marker='o', markersize=7, markerfacecolor="blue")
+    line3a = Line2D([], [], color="green", marker='o', markersize=7, markerfacecolor="green")
+    plt.legend((line1a, line2a, line3a), ('Body 1', 'Body 2', 'Body 3'), numpoints=1, loc=1)
     plt.show()
 
 

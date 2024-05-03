@@ -22,7 +22,7 @@ def findUxt(hx,ht,Tmax):
     f = lambda i,j :  (u[i-1][j-1] + u[i+1][j-1]-2*u[i][j-1])/(hx**2)
 
     for j in range(1,Nt+1):
-        for i in range(len(u)):
+        for i in range(N+1):
             if ArrX[i]==0 or ArrX[i] == 1:
                 u[i].append(0)
             else:

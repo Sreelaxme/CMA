@@ -13,7 +13,7 @@ def errorVisualizer():
     (ej,xj) = s.jSolve(b, m)
     (egs,xgs) = s.gsSolve(b, m)
     print("Solution is by jSolve:",xj)
-    print("Solution is by gsSolve:",xgs)
+    print("Solution is by gsSolve:",xgs) 
 
     #plotting the graph
     plt.plot(x,ej, color = "b", label = "jSolve")

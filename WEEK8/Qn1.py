@@ -30,7 +30,7 @@ class Matrix:
         for i in range(self.m):
             for j in range(self.n):
                 if i==j:
-                    self.matrix[i,j] =  1 
+                    self[i,j] =  1 
         
         # U, S, Vt = np.linalg.svd(self.matrix)
         # diagonal_matrix = np.diag(S)
@@ -207,23 +207,29 @@ class Matrix:
         e = e[0,0]
         return e,v
     def Power(self,A):
-        b = Matrix(A.n,1)
-        b.toOne()
-        b_old = Matrix(A.n,1)
-        b_old.randomize()
-        # print(type((self*b).norm(2)))
-        while b!=b_old:
-            b_old = b
-            b = (A * b)/((A*b).norm(2))
-            # b = (self * b)*1/np.linalg.norm((self*b).matrix,2)
+      b = Matrix(A.n,1)
+      b.toOne()
+      b_old = Matrix(A.n,1)
+    #   print(np.linalg.norm(b.data))
+      b = b/np.linalg.norm(b.matrix)
+      b_old.randomize()
+      # print(type((self*b).norm(2)))
+      for i in range(1000):
+          b_old = b
+          b = (A * b)/((A*b).norm(2,2))
+          b = b/np.linalg.norm(b.matrix)  # Normalize b
+          # b = (self * b)*1/np.linalg.norm((self*b).matrix,2)
+          # Check for convergence
+          if np.linalg.norm((b - b_old).matrix) < 1e-10:
+              break
+      v = b
+      # print(b.t()*b)
+      deno = b.t()*b
+      deno = deno[0,0]
+      e =((b.t() * A) * b)/deno
 
-        v = b
-        print(b.t()*b)
-        deno = b.t()*b
-        deno = deno[0,0]
-        e =((b.t() * A) * b)/deno
-        # print(type(e))
-        return e,v
+      # print(type(e))
+      return e,v
     def power_method(self, tol=1e-6, max_iter=1000):
         x = np.ones(self.n)  # Initial guess for the eigenvector
         x /= np.linalg.norm(x, ord=2)  # Normalize the initial guess
@@ -246,9 +252,9 @@ class Matrix:
 
         return eigenvalue, x
 if __name__=="__main__":
-    m = Matrix(3,4)
-    m.toOne()
-    print(m)
+    # m = Matrix(3,4)
+    # m.toEye()
+    # print(m)
     # m = Matrix(3, 4)
     # m[1, 1] = 2
     # m[2, 3] = 4
@@ -288,14 +294,7 @@ if __name__=="__main__":
     # print(m.norm(2))
     # print(m.norm(math.inf))
 
-    m = Matrix(2, 3)
-
-    for i in range(2):
-        for j in range(3):
-            m[i, j] = (i+1) + (j+1)
-    print(m)
-    print(m.solvezero())
-
+    
     # m = Matrix(3, 3)
     # for i in range(3):
     #     for j in range(3):
@@ -313,3 +312,11 @@ if __name__=="__main__":
     # m[1,2] = 0.40772897
 
     # print(m.norm(math.inf,math.inf))
+    m = Matrix(2,2)
+    m[0,0] = 1
+    m[0,1] = 0
+    m[1,0] = 0
+    m[1,1] = 2
+    e,v = m.dominantEigen()
+    print(e)
+    print(v)
